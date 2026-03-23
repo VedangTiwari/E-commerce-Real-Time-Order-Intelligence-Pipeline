@@ -1,0 +1,28 @@
+CREATE OR REPLACE TABLE clean_orders AS
+SELECT 
+    data:order_id::INT AS order_id,
+    data:customer_id::INT AS customer_id,
+    data:order_time::TIMESTAMP AS order_time,
+    data:amount::NUMBER AS amount,
+    data:status::STRING AS status
+FROM raw_orders;
+
+
+CREATE OR REPLACE TABLE clean_payments AS
+SELECT 
+    data:order_id::INT AS order_id,
+    data:payment_id::INT AS payment_id,
+    data:payment_method::STRING AS payment_method,
+    data:payment_time::TIMESTAMP AS payment_time
+FROM raw_payments;
+
+
+CREATE OR REPLACE TABLE clean_customers AS
+SELECT 
+    TRY_TO_NUMBER(customer_id) AS customer_id,
+    TRIM(name) AS name,
+    TRIM(city) AS city,
+    TRY_TO_TIMESTAMP(signup_date) AS signup_date
+FROM raw_customers;
+
+

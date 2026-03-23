@@ -1,0 +1,27 @@
+CREATE OR REPLACE TABLE raw_orders (data VARIANT);
+CREATE OR REPLACE TABLE raw_payments (data VARIANT);
+
+CREATE OR REPLACE TABLE raw_customers (
+    customer_id STRING,
+    name STRING,
+    city STRING,
+    signup_date STRING
+);
+
+COPY INTO raw_orders
+FROM @my_stage
+FILES = ('orders.json')
+FILE_FORMAT = (TYPE = JSON)
+ON_ERROR = 'CONTINUE';
+
+COPY INTO raw_payments
+FROM @my_stage
+FILES = ('payments.json')
+FILE_FORMAT = (TYPE = JSON)
+ON_ERROR = 'CONTINUE';
+
+COPY INTO raw_customers
+FROM @my_stage
+FILES = ('customers.csv')
+FILE_FORMAT = (TYPE = CSV FIELD_DELIMITER=',' SKIP_HEADER=1);
+

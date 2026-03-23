@@ -1,0 +1,39 @@
+CREATE OR REPLACE TASK update_order_master
+WAREHOUSE = COMPUTE_WH
+SCHEDULE = '1 MINUTE'
+WHEN SYSTEM$STREAM_HAS_DATA('orders_stream')
+AS
+
+MERGE INTO order_master t
+USING (
+    SELECT 
+        o.order_id,
+        o.customer_id,
+        o.order_time,
+        o.amount,
+        o.status,
+
+        p.payment_id,
+        p.payment_method,
+        p.payment_time,
+
+        c.name,
+        c.city,
+        c.signup_date
+
+    FROM orders_stream o
+    LEFT JOIN latest_payments p ON o.order_id = p.order_id
+    LEFT JOIN clean_customers c ON o.customer_id = c.customer_id
+) s
+ON t.order_id = s.order_id
+
+WHEN NOT MATCHED THEN INSERT VALUES (
+    s.order_id, s.customer_id, s.order_time, s.amount, s.status,
+    s.payment_id, s.payment_method, s.payment_time,
+    s.name, s.city, s.signup_date
+);
+
+ALTER TASK update_order_master RESUME;
+
+
+

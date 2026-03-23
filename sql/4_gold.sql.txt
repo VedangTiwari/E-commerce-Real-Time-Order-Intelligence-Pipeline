@@ -1,0 +1,45 @@
+CREATE OR REPLACE TABLE latest_orders AS
+SELECT *
+FROM (
+    SELECT *,
+           ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY order_time DESC) rn
+    FROM clean_orders
+)
+WHERE rn = 1;
+
+
+CREATE OR REPLACE TABLE latest_payments AS
+SELECT *
+FROM (
+    SELECT *,
+           ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY payment_time DESC) rn
+    FROM clean_payments
+)
+WHERE rn = 1;
+
+
+//initial load in final table
+
+CREATE OR REPLACE TABLE order_master AS
+SELECT 
+    o.order_id,
+    o.customer_id,
+    o.order_time,
+    o.amount,
+    o.status,
+
+    p.payment_id,
+    p.payment_method,
+    p.payment_time,
+
+    c.name,
+    c.city,
+    c.signup_date
+
+FROM latest_orders o
+LEFT JOIN latest_payments p ON o.order_id = p.order_id
+LEFT JOIN clean_customers c ON o.customer_id = c.customer_id;
+
+
+select * from order_master;
+

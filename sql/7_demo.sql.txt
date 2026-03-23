@@ -1,0 +1,6 @@
+SELECT * FROM order_master
+
+INSERT INTO clean_orders VALUES
+(999, 1, CURRENT_TIMESTAMP, 20000, 'completed');
+
+SELECT * FROM orders_stream;
