@@ -1,14 +1,11 @@
-# Snowflake Data Pipeline (Hackathon Project)
+# 🚀 E-commerce Real-Time Order Intelligence Pipeline
 
-## 📌 Overview
+## 📌 Problem Statement
 
-This project implements a complete **data pipeline using Snowflake** following the Medallion Architecture:
+E-commerce platforms generate continuous order and payment data.
+Traditional batch pipelines fail to process real-time updates efficiently.
 
-* Bronze → Raw ingestion
-* Silver → Data cleaning & transformation
-* Gold → Business-ready tables
-* Streams → Change Data Capture
-* Tasks → Automation
+👉 This project solves that using **Snowflake Streams & Tasks** for real-time data processing.
 
 ---
 
@@ -22,41 +19,27 @@ Raw Data → Bronze → Silver → Gold → Stream → Task → Final Table
 
 * Snowflake
 * SQL
-* Streams & Tasks
-
----
-
-## 📂 Project Structure
-
-```
-sql/
- ├── 1_setup.sql
- ├── 2_bronze.sql
- ├── 3_silver.sql
- ├── 4_gold.sql
- ├── 5_streams.sql
- ├── 6_tasks.sql
- └── 7_demo.sql
-```
+* Streams (CDC)
+* Tasks (Automation)
 
 ---
 
 ## 🔄 Pipeline Flow
 
 1. Load raw data into Bronze layer
-2. Clean and transform into Silver layer
-3. Create final analytical tables in Gold layer
-4. Use Streams to track new data
-5. Use Tasks to automate incremental processing
+2. Clean & structure data in Silver layer
+3. Create business-ready tables in Gold layer
+4. Stream captures incremental changes
+5. Task automatically updates final table
 
 ---
 
 ## ⚡ Key Features
 
-* Incremental data processing
+* Real-time incremental processing
 * No duplicate handling using MERGE
-* Real-time automation with Streams & Tasks
-* Scalable architecture
+* Fully automated pipeline
+* Scalable medallion architecture
 
 ---
 
@@ -64,20 +47,44 @@ sql/
 
 Run SQL files in order:
 
-1 → 2 → 3 → 4 → 5 → 6 → 7
+1_setup.sql
+2_bronze.sql
+3_silver.sql
+4_gold.sql
+5_streams.sql
+6_tasks.sql
+7_demo.sql
 
 ---
 
-## 🎯 Demo
+## 🎯 Demo (MOST IMPORTANT)
 
-Insert new data into `clean_orders`
-Stream captures change → Task processes → Final table updates
+1. Insert new order into `clean_orders`
+2. Stream captures new data
+3. Task processes the stream
+4. Final table (`order_master`) gets updated
 
 ---
 
 ## 🧠 Key Learnings
 
-* Streams track only new changes (CDC)
+* Streams capture only new changes (CDC)
 * Tasks automate pipelines
 * MERGE prevents duplicate records
-* Separation of layers improves scalability
+* ROW_NUMBER ensures latest records
+
+---
+
+## 💡 Why This Stands Out
+
+Unlike batch pipelines, this solution:
+
+* Processes data incrementally
+* Reduces compute cost
+* Enables near real-time analytics
+
+---
+
+## 👨‍💻 Author
+
+Vedang Tiwari
